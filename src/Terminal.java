@@ -41,3 +41,22 @@ public class Terminal {
 
     }
 }
+// Adham
+// echo
+// cd
+// mkdir
+// touch
+// cp
+// cp -r
+// cat
+// Exit
+
+// Omar
+// pwd
+// ls
+// ls -r
+// rmdir
+// rm
+// >
+// >>
+// choose command
