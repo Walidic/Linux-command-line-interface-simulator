@@ -40,16 +40,15 @@ class Parser {
 
 public class Terminal {
     static Parser parser = new Parser();
-    String output= new String();
+    String output = new String();
 
     public void pwd() {
         System.out.println("in pwd function");
     }
 
-    public void echo(String [] input)
-    {
-       int size= input.length;
-        output=input;
+    public void echo(String[] input) {
+        int size = input.length;
+        output = input;
         System.out.println(output);
 
     }
