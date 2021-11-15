@@ -1,4 +1,6 @@
 import java.util.Scanner;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 class Parser {
     String commandName;
@@ -35,9 +37,11 @@ class Parser {
 public class Terminal {
     static Parser parser = new Parser();
     String output = new String();
+    Path path = Paths.get("E:\\liinux_file_system");
 
     public void pwd() {
-        System.out.println("in pwd function");
+        output = path.toString();
+        System.out.println(output);
     }
 
     public void echo(String[] input) {
