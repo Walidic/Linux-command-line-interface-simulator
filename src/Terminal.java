@@ -46,8 +46,9 @@ public class Terminal {
         System.out.println("in pwd function");
     }
 
-    public void echo(String input)
+    public void echo(String [] input)
     {
+       int size= input.length;
         output=input;
         System.out.println(output);
 
