@@ -1,5 +1,3 @@
-
-// Walidic: ama shaghal fel code
 import java.util.Scanner;
 
 class Parser {
