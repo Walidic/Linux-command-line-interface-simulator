@@ -47,11 +47,26 @@ public class Terminal {
     }
 
     public void echo(String[] input) {
-        int size = input.length;
-        for(int i = 0; i < size; i++) {
-            output= output+" "+input[i];
+        if(input==null || input.length>0)
+        {
+            int size = input.length;
+            output=input[0];
+            for(int i = 1; i < size; i++) { //1 to ignore the space
+                output= output+" "+input[i];
+            }
+            System.out.println(output);
+            output="";
+
         }
-        System.out.println(output);
+        else
+        {
+            System.out.println("Please enter an argument");
+        }
+    }
+
+    public void cd(String[] input)
+    {
+        
 
     }
 
@@ -83,8 +98,7 @@ public class Terminal {
     }
 }
 // Adham
-// echo
-
+// echo done
 // cd
 // mkdir
 // touch
