@@ -1,3 +1,4 @@
+import java.util.Iterator;
 import java.util.Scanner;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -63,6 +64,11 @@ public class Terminal {
 
     }
 
+    public void ls(String[] input) {
+        int x = path.getNameCount();
+        System.out.println(x);
+    }
+
     public void chooseCommandAction(String command) {
 
         switch (command) {
@@ -71,6 +77,12 @@ public class Terminal {
             break;
         case "echo":
             echo(parser.getArgs());
+            break;
+        case "cd":
+            cd(parser.getArgs());
+            break;
+        case "ls":
+            ls(parser.getArgs());
             break;
         default:
             System.out.println("command not recognized");
