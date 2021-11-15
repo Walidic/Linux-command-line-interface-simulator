@@ -1,4 +1,7 @@
+
 // Walidic: ama shaghal fel code
+import java.util.Scanner;
+
 class Parser {
     String commandName;
     String[] args;
@@ -38,8 +41,44 @@ class Parser {
 }
 
 public class Terminal {
-    public static void main(String[] args) throws Exception {
+    static Parser parser = new Parser();
 
+    public void pwd() {
+        System.out.println("in pwd function");
+    }
+
+    public void chooseCommandAction(String command) {
+        boolean commandExists = false; // variable to be turned true only if command exists in the array
+        String availbleComands[] = { "pwd", };
+
+        for (String i : availbleComands) { // checkong if the command is supported by our class
+
+            if (i.equals(command)) {
+                commandExists = true;
+            } else {
+
+                System.out.println("command does not exist");
+            }
+        }
+
+        if (commandExists) {
+            switch (command) {
+            case "pwd":
+                pwd();
+            }
+        }
+
+    }
+
+    public static void main(String[] args) throws Exception {
+        Terminal terminal = new Terminal();
+        Scanner sc = new Scanner(System.in);
+        while (true) {
+            String enteredCommand = sc.nextLine();
+            terminal.parser.parse(enteredCommand);
+            String command = parser.getCommandName();
+            terminal.chooseCommandAction(command);
+        }
     }
 }
 // Adham
