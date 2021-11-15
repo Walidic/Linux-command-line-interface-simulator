@@ -40,9 +40,17 @@ class Parser {
 
 public class Terminal {
     static Parser parser = new Parser();
+    String output= new String();
 
     public void pwd() {
         System.out.println("in pwd function");
+    }
+
+    public void echo(String input)
+    {
+        output=input;
+        System.out.println(output);
+
     }
 
     public void chooseCommandAction(String command) {
@@ -69,6 +77,7 @@ public class Terminal {
 }
 // Adham
 // echo
+
 // cd
 // mkdir
 // touch
