@@ -14,7 +14,6 @@ class Parser {
                 int j = 0;
                 for (int i = 1; i < size; i++) {
                     args[j] = ParsedData[i];
-                    System.out.println(ParsedData[i]);
                     j++;
                 }
             }
@@ -42,26 +41,21 @@ public class Terminal {
     }
 
     public void echo(String[] input) {
-        if(input==null || input.length>0)
-        {
+        if (input == null || input.length > 0) {
             int size = input.length;
-            output=input[0];
-            for(int i = 1; i < size; i++) { //1 to ignore the space
-                output= output+" "+input[i];
+            output = input[0];
+            for (int i = 1; i < size - 1; i++) { // 1 to ignore the space
+                output = output + " " + input[i];
             }
             System.out.println(output);
-            output="";
+            output = "";
 
-        }
-        else
-        {
+        } else {
             System.out.println("Please enter an argument");
         }
     }
 
-    public void cd(String[] input)
-    {
-        
+    public void cd(String[] input) {
 
     }
 
