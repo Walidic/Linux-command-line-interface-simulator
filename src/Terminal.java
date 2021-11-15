@@ -48,7 +48,9 @@ public class Terminal {
 
     public void echo(String[] input) {
         int size = input.length;
-        output = input;
+        for(int i = 0; i < size; i++) {
+            output= output+" "+input[i];
+        }
         System.out.println(output);
 
     }
@@ -58,8 +60,13 @@ public class Terminal {
         switch (command) {
         case "pwd":
             pwd();
+            break;
+        case"echo":
+            echo(parser.getArgs());
+            break;
         default:
             System.out.println("command not recognized");
+            break;
         }
 
     }
