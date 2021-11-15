@@ -107,7 +107,7 @@ public class Terminal {
             break;
         case "ls":
             ls(parser.getArgs());
-            break;
+             break;
         default:
             System.out.println("command not recognized");
             break;
