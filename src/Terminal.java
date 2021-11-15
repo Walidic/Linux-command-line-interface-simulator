@@ -14,7 +14,7 @@ class Parser {
             commandName = ParsedData[0];
             if (ParsedData.length > 1) {
                 int size = ParsedData.length;
-                args = new String[size-1];
+                args = new String[size - 1];
                 int j = 0;
                 for (int i = 1; i < size; i++) {
                     args[j] = ParsedData[i];
@@ -33,6 +33,11 @@ class Parser {
 
     public String[] getArgs() {
         return args;
+    }
+
+    public void clear() {
+        commandName = "";
+        args = null;
     }
 }
 
@@ -61,46 +66,31 @@ public class Terminal {
         }
     }
 
-    public void cd(String[] input)
-    {
+    public void cd(String[] input) {
 
-        if(input==null)
-        { // check that there is  NO arguments
-            path=Paths.get("E:\\linux_file_system\\home");
-        }
-        else if(input.length==1)
-        {
-            if(input[0].equals(".."))
-            {
-                if(!path.toString().equals("E:\\"))
-                {
-                    //.. return to home directory
-                    path=path.getParent();
-                }
-                else
-                {
+        if (input == null) { // check that there is NO arguments
+            path = Paths.get("E:\\linux_file_system\\home");
+        } else if (input.length == 1) {
+            if (input[0].equals("..")) {
+                if (!path.toString().equals("E:\\")) {
+                    // .. return to home directory
+                    path = path.getParent();
+                } else {
                     System.out.println("Reached root");
                 }
-            }
-            else
-            {   //absolute or realtive path
-                if(Files.exists(Paths.get(input[0])))
-                { //check given path is here
-                    path=Paths.get(input[0]);
+            } else { // absolute or realtive path
+                if (Files.exists(Paths.get(input[0]))) { // check given path is here
+                    path = Paths.get(input[0]);
                 }
-                //realtive
+                // realtive
             }
-        }
-        else
-        {
+        } else {
             System.out.println("Too many arguments");
         }
-
     }
 
     public void ls(String[] input) {
-        int x = path.getNameCount();
-        System.out.println(x);
+
     }
 
     public void chooseCommandAction(String command) {
@@ -133,6 +123,7 @@ public class Terminal {
             terminal.parser.parse(enteredCommand);
             String command = parser.getCommandName();
             terminal.chooseCommandAction(command);
+            parser.clear();
         }
     }
 }
