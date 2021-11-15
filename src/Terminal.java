@@ -6,25 +6,20 @@ class Parser {
 
     public boolean parse(String input) {
         String[] ParsedData = input.split(" ");
-        // check for option and fills command name
-        int i;// index for the upcoming while loop
-        if (ParsedData[1].charAt(0) == '-') {
-            commandName = ParsedData[0] + " " + ParsedData[1];
-            // start for the while loop
-            i = 2;
-        } else {
+        if (ParsedData.length > 0) {
             commandName = ParsedData[0];
-            // start for the while loop brdo
-            i = 1;
-        }
-        // initializing the args array
-        args = new String[ParsedData.length - i];
-        // fills the argument array+
-        int j = 0;
-        while (i < ParsedData.length) {
-            args[j] = ParsedData[i];
-            i++;
-            j++;
+            if (ParsedData.length > 1) {
+                int size = ParsedData.length;
+                args = new String[size];
+                int j = 0;
+                for (int i = 1; i < size; i++) {
+                    args[j] = ParsedData[i];
+                    System.out.println(ParsedData[i]);
+                    j++;
+                }
+            }
+        } else {
+            System.out.println("no input entered");
         }
         return true;
     }
@@ -76,7 +71,7 @@ public class Terminal {
         case "pwd":
             pwd();
             break;
-        case"echo":
+        case "echo":
             echo(parser.getArgs());
             break;
         default:
