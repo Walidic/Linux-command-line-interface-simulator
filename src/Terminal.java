@@ -38,13 +38,19 @@ class Parser {
             }
         }
         return true;
-}
+    }
+
     public String getCommandName() {
         return commandName;
     }
 
     public String[] getArgs() {
         return args;
+    }
+
+    public void clear() {
+        commandName = "";
+        args = null;
     }
 }
 
@@ -75,8 +81,7 @@ public class Terminal {
 
     public void cd(String[] input) {
 
-        if (input == null)
-        { // check that there is NO arguments
+        if (input == null) { // check that there is NO arguments
             path = Paths.get("E:\\linux_file_system\\home");
         } else if (input.length == 1) {
             if (input[0].equals("..")) {
@@ -96,10 +101,9 @@ public class Terminal {
                     } else {
                         System.out.println("No directory found ");
                     }
-                }
-                else //absolute
+                } else // absolute
                 {
-                    path=Paths.get(input[0]);
+                    path = Paths.get(input[0]);
                 }
             }
         } else {
@@ -108,18 +112,16 @@ public class Terminal {
 
     }
 
-    public void mkdir(String [] input)
-{
-    try
-    {       path = Paths.get(input[0]);
+    public void mkdir(String[] input) {
+        try {
+            path = Paths.get(input[0]);
             Files.createDirectory(path);
 
-    } catch (IOException e)
-    {
-        // TODO Auto-generated catch block
-        System.err.println("Failed to create directory!" + e.getMessage());
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            System.err.println("Failed to create directory!" + e.getMessage());
+        }
     }
-}
 
     public void ls(String[] input) {
         if (input == null) {
@@ -166,7 +168,7 @@ public class Terminal {
             terminal.parser.parse(enteredCommand);
             String command = parser.getCommandName();
             terminal.chooseCommandAction(command);
-
+            parser.clear();
         }
     }
 }
