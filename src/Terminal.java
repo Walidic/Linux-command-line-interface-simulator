@@ -84,11 +84,21 @@ public class Terminal {
             }
             else
             {   //absolute or realtive path
+                //check given path is here
                 if(Files.exists(Paths.get(input[0])))
-                { //check given path is here
+                {
                     path=Paths.get(input[0]);
                 }
                 //realtive
+                if(!Paths.get(input[0]).isAbsolute())
+                
+                {   Path currentDirectory = Paths.get(input[0]);
+                    String parentDirectory = currentDirectory.getParent().toString();
+                    System.out.println(currentDirectory.toString());
+                   // System.out.println(parentDirectory.toString());
+                   // String completePath = parentDirectory.toString() + currentDirectory.toString();
+                   // path=Paths.get(completePath);
+                }
             }
         }
         else
