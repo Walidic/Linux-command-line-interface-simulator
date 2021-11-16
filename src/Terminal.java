@@ -38,8 +38,7 @@ class Parser {
             }
         }
         return true;
-    }
-
+}
     public String getCommandName() {
         return commandName;
     }
@@ -76,7 +75,8 @@ public class Terminal {
 
     public void cd(String[] input) {
 
-        if (input == null) { // check that there is NO arguments
+        if (input == null)
+        { // check that there is NO arguments
             path = Paths.get("E:\\linux_file_system\\home");
         } else if (input.length == 1) {
             if (input[0].equals("..")) {
@@ -88,25 +88,18 @@ public class Terminal {
                 }
             } else { // absolute or realtive path
                      // check given path is here
-
-                // if(Files.exists(Paths.get(input[0])))
-                // {
-                // path=Paths.get(input[0]);
-                // }
-                // else
-                // {
-                // System.out.println("No directory found ");
-                // }
-                // realtive
                 if (!Paths.get(input[0]).isAbsolute()) {
                     String currentPath = path.toString();
                     String fullPath = currentPath + "\\" + input[0];
-                    System.out.println(fullPath);
                     if (Files.exists(Paths.get(fullPath.toString()))) {
                         path = Paths.get(fullPath.toString());
                     } else {
                         System.out.println("No directory found ");
                     }
+                }
+                else //absolute
+                {
+                    path=Paths.get(input[0]);
                 }
             }
         } else {
@@ -114,6 +107,19 @@ public class Terminal {
         }
 
     }
+
+    public void mkdir(String [] input)
+{
+    try
+    {       path = Paths.get(input[0]);
+            Files.createDirectory(path);
+
+    } catch (IOException e)
+    {
+        // TODO Auto-generated catch block
+        System.err.println("Failed to create directory!" + e.getMessage());
+    }
+}
 
     public void ls(String[] input) {
         if (input == null) {
@@ -142,6 +148,9 @@ public class Terminal {
         case "ls":
             ls(parser.getArgs());
             break;
+        case "mkdir":
+            mkdir(parser.getArgs());
+            break;
         default:
             System.out.println("command not recognized");
             break;
@@ -157,6 +166,7 @@ public class Terminal {
             terminal.parser.parse(enteredCommand);
             String command = parser.getCommandName();
             terminal.chooseCommandAction(command);
+
         }
     }
 }
