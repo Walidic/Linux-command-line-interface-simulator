@@ -22,11 +22,20 @@ class Parser {
                     j++;
                 }
             }
-            for(int i = 1; i <ParsedData.length; i++) {
-                // ParsedData;
+            for (int i = 0; i < args.length; i++) {
+                if (args[i].charAt(0) == '"') {
+                    for (int j = i + 1; j < args.length - (i + 1); j++) {
+                        if (args[j].charAt(args[j].length() - 1) == '"') {
+                            args[i] = args[i] + " " + args[j];
+                            break;
+                        } else {
+                            args[i] = args[i] + " " + args[j];
+                        }
+                    }
+                } else {
+                    System.out.println("no input entered");
+                }
             }
-            else {
-            System.out.println("no input entered");
         }
         return true;
     }
