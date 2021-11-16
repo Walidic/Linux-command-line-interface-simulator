@@ -22,7 +22,10 @@ class Parser {
                     j++;
                 }
             }
-        } else {
+            for(int i = 1; i <ParsedData.length; i++) {
+                // ParsedData;
+            }
+            else {
             System.out.println("no input entered");
         }
         return true;
