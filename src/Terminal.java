@@ -1,7 +1,8 @@
-import java.util.Iterator;
 import java.util.Scanner;
+import java.util.stream.Stream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.io.IOException;
 import java.nio.file.Files;
 
 class Parser {
@@ -55,7 +56,7 @@ public class Terminal {
         if (input == null || input.length > 0) {
             int size = input.length;
             output = input[0];
-            for (int i = 1; i < size - 1; i++) { // 1 to ignore the space
+            for (int i = 1; i < size; i++) {
                 output = output + " " + input[i];
             }
             System.out.println(output);
@@ -90,7 +91,16 @@ public class Terminal {
     }
 
     public void ls(String[] input) {
+        if (input == null) {
+            try (Stream<Path> subPath = Files.walk(path, 1)) {
+                subPath.forEach(System.out::println);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        else if (input.length==1){
 
+        }
     }
 
     public void chooseCommandAction(String command) {
@@ -107,7 +117,7 @@ public class Terminal {
             break;
         case "ls":
             ls(parser.getArgs());
-             break;
+            break;
         default:
             System.out.println("command not recognized");
             break;
