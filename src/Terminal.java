@@ -79,20 +79,25 @@ public class Terminal {
                 }
             } else { // absolute or realtive path
                      // check given path is here
-                if (Files.exists(Paths.get(input[0]))) {
-                    path = Paths.get(input[0]);
-                }
-                // realtive
-                if (!Paths.get(input[0]).isAbsolute())
 
-                {
-                    Path currentDirectory = Paths.get(input[0]);
-                    String parentDirectory = currentDirectory.getParent().toString();
-                    System.out.println(currentDirectory.toString());
-                    // System.out.println(parentDirectory.toString());
-                    // String completePath = parentDirectory.toString() +
-                    // currentDirectory.toString();
-                    // path=Paths.get(completePath);
+                // if(Files.exists(Paths.get(input[0])))
+                // {
+                // path=Paths.get(input[0]);
+                // }
+                // else
+                // {
+                // System.out.println("No directory found ");
+                // }
+                // realtive
+                if (!Paths.get(input[0]).isAbsolute()) {
+                    String currentPath = path.toString();
+                    String fullPath = currentPath + "\\" + input[0];
+                    System.out.println(fullPath);
+                    if (Files.exists(Paths.get(fullPath.toString()))) {
+                        path = Paths.get(fullPath.toString());
+                    } else {
+                        System.out.println("No directory found ");
+                    }
                 }
             }
         } else {
