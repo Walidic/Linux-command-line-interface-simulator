@@ -2,8 +2,13 @@ import java.util.Scanner;
 import java.util.stream.Stream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+
 
 class Parser {
     String commandName;
@@ -22,20 +27,20 @@ class Parser {
                     j++;
                 }
             }
-            for (int i = 0; i < args.length; i++) {
-                if (args[i].charAt(0) == '"') {
-                    for (int j = i + 1; j < args.length - (i + 1); j++) {
-                        if (args[j].charAt(args[j].length() - 1) == '"') {
-                            args[i] = args[i] + " " + args[j];
-                            break;
-                        } else {
-                            args[i] = args[i] + " " + args[j];
-                        }
-                    }
-                } else {
-                    System.out.println("no input entered");
-                }
-            }
+            // for (int i = 0; i < args.length; i++) {
+            //     if (args[i].charAt(0) == '"') {
+            //         for (int j = i + 1; j < args.length - (i + 1); j++) {
+            //             if (args[j].charAt(args[j].length() - 1) == '"') {
+            //                 args[i] = args[i] + " " + args[j];
+            //                 break;
+            //             } else {
+            //                 args[i] = args[i] + " " + args[j];p
+            //             }
+            //         }
+            //     } else {
+            //         System.out.println("no input entered");
+            //     }
+            // }
         }
         return true;
     }
@@ -113,14 +118,36 @@ public class Terminal {
     }
 
     public void mkdir(String[] input) {
-        try {
-            path = Paths.get(input[0]);
-            Files.createDirectory(path);
-
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            System.err.println("Failed to create directory!" + e.getMessage());
+        //loop on all arguments
+        String currentPath = path.toString();
+         for(int i=0; i<input.length;i++)
+        {
+            // check full or realtive  path
+        if(Paths.get(input[i]).isAbsolute())
+        {// full path
+            try {
+                path = Paths.get(input[i]);
+                Files.createDirectory(path);
+    
+            } catch (IOException e) {
+                System.err.println("Failed to create directory!" + e.getMessage());
+            }
         }
+        else
+        { // realitve
+            try {
+                String fullpath="";
+                fullpath = currentPath + "\\" + input[i];
+                 path = Paths.get(fullpath.toString());
+                 Files.createDirectory(path);
+    
+            } catch (Exception e) {
+                System.err.println("Failed to create directory!" + e.getMessage());
+            }
+        }
+        }
+        
+        
     }
 
     public void ls(String[] input) {
@@ -133,6 +160,35 @@ public class Terminal {
         } else if (input.length == 1) {
 
         }
+    }
+
+    public void touch(String [] input)
+    { String currentPath=path.toString();
+        //check full or realtive  path
+        if(Paths.get(input[0]).isAbsolute())
+        { // full path
+            try
+            {
+                Files.createFile(Paths.get(input[0]));
+            }
+            catch (Exception e) 
+            {
+                System.err.println("Failed to create file!" + e.getMessage());
+            }
+        }
+        else
+        {// realtive path
+            try {
+                String fullpath="";
+                fullpath = currentPath + "\\" + input[0];
+                 path = Paths.get(fullpath.toString());
+                 Files.createFile(path);
+    
+            } catch (Exception e) {
+                System.err.println("Failed to create file!" + e.getMessage());
+            }
+        }
+        
     }
 
     public void chooseCommandAction(String command) {
@@ -153,6 +209,9 @@ public class Terminal {
         case "mkdir":
             mkdir(parser.getArgs());
             break;
+        case "touch":
+            touch(parser.getArgs());
+            break;
         default:
             System.out.println("command not recognized");
             break;
@@ -165,7 +224,7 @@ public class Terminal {
         Scanner sc = new Scanner(System.in);
         while (true) {
             String enteredCommand = sc.nextLine();
-            terminal.parser.parse(enteredCommand);
+            parser.parse(enteredCommand);
             String command = parser.getCommandName();
             terminal.chooseCommandAction(command);
             parser.clear();
@@ -174,20 +233,14 @@ public class Terminal {
 }
 // Adham
 // echo done
-// cd
-// mkdir
-// touch
+// cd done
+// mkdir done 
+// touch done
 // cp
 // cp -r
 // cat
 // Exit
-
-// Omar
-// pwd
-// ls
-// ls -r
-// rmdir
-// rm
+//rm
 // >
 // >>
 // choose command
