@@ -1,4 +1,5 @@
 import java.util.Scanner;
+import java.util.Stack;
 import java.util.stream.Stream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -22,20 +23,7 @@ class Parser {
                     j++;
                 }
             }
-            for (int i = 0; i < args.length; i++) {
-                if (args[i].charAt(0) == '"') {
-                    for (int j = i + 1; j < args.length - (i + 1); j++) {
-                        if (args[j].charAt(args[j].length() - 1) == '"') {
-                            args[i] = args[i] + " " + args[j];
-                            break;
-                        } else {
-                            args[i] = args[i] + " " + args[j];
-                        }
-                    }
-                } else {
-                    System.out.println("no input entered");
-                }
-            }
+
         }
         return true;
     }
@@ -132,7 +120,26 @@ public class Terminal {
             }
         } else if (input.length == 1) {
 
+            Stack<Path> stack = new Stack<Path>();
+            if (input[0].equals("-r")) {
+                try (Stream<Path> subPath = Files.walk(path, 1)) {
+                    subPath.forEach(stack::push);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                while (!stack.empty()) {
+                    System.out.println(stack.pop().toString());
+                }
+            } else {
+                System.out.println("Wrong argument");
+            }
+        } else {
+            System.out.println("Too many arguments");
         }
+    }
+
+    public void bo2samaka(String output,String path){
+
     }
 
     public void chooseCommandAction(String command) {
@@ -165,7 +172,7 @@ public class Terminal {
         Scanner sc = new Scanner(System.in);
         while (true) {
             String enteredCommand = sc.nextLine();
-            terminal.parser.parse(enteredCommand);
+            parser.parse(enteredCommand);
             String command = parser.getCommandName();
             terminal.chooseCommandAction(command);
             parser.clear();
