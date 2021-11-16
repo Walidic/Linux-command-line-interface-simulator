@@ -35,11 +35,6 @@ class Parser {
     public String[] getArgs() {
         return args;
     }
-
-    public void clear() {
-        commandName = "";
-        args = null;
-    }
 }
 
 public class Terminal {
@@ -80,14 +75,27 @@ public class Terminal {
                     System.out.println("Reached root");
                 }
             } else { // absolute or realtive path
-                if (Files.exists(Paths.get(input[0]))) { // check given path is here
+                     // check given path is here
+                if (Files.exists(Paths.get(input[0]))) {
                     path = Paths.get(input[0]);
                 }
                 // realtive
+                if (!Paths.get(input[0]).isAbsolute())
+
+                {
+                    Path currentDirectory = Paths.get(input[0]);
+                    String parentDirectory = currentDirectory.getParent().toString();
+                    System.out.println(currentDirectory.toString());
+                    // System.out.println(parentDirectory.toString());
+                    // String completePath = parentDirectory.toString() +
+                    // currentDirectory.toString();
+                    // path=Paths.get(completePath);
+                }
             }
         } else {
             System.out.println("Too many arguments");
         }
+
     }
 
     public void ls(String[] input) {
@@ -97,8 +105,7 @@ public class Terminal {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
-        else if (input.length==1){
+        } else if (input.length == 1) {
 
         }
     }
@@ -133,7 +140,6 @@ public class Terminal {
             terminal.parser.parse(enteredCommand);
             String command = parser.getCommandName();
             terminal.chooseCommandAction(command);
-            parser.clear();
         }
     }
 }
