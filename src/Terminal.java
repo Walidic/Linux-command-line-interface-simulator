@@ -123,29 +123,39 @@ public class Terminal {
     public void mkdir(String[] input) {
         // loop on all arguments
         String currentPath = path.toString();
-        for (int i = 0; i < input.length; i++) {
-            // check full or realtive path
-            if (Paths.get(input[i]).isAbsolute()) {// full path
-                try {
-                    path = Paths.get(input[i]);
-                    Files.createDirectory(path);
+        if(input==null)
+        {
+            System.out.println("please pass parameters");
+        }
+        else
+        {
+            for(int i=0; i<input.length;i++)
+            {
+                            // check full or realtive  path
+                if(Paths.get(input[i]).isAbsolute())
+                {// full path
+                    try {
+                        path = Paths.get(input[i]);
+                        Files.createDirectory(path);
 
-                } catch (IOException e) {
-                    System.err.println("Failed to create directory!" + e.getMessage());
+                    } catch (IOException e) {
+                        System.err.println("Failed to create directory!" + e.getMessage());
+                    }
                 }
-            } else { // realitve
-                try {
-                    String fullpath = "";
-                    fullpath = currentPath + "\\" + input[i];
-                    path = Paths.get(fullpath.toString());
-                    Files.createDirectory(path);
+                else
+                { // realitve
+                    try {
+                        String fullpath="";
+                        fullpath = currentPath + "\\" + input[i];
+                        path = Paths.get(fullpath.toString());
+                        Files.createDirectory(path);
 
-                } catch (Exception e) {
-                    System.err.println("Failed to create directory!" + e.getMessage());
+                    } catch (Exception e) {
+                        System.err.println("Failed to create directory!" + e.getMessage());
+                    }
                 }
             }
         }
-
     }
 
     public void ls(String[] input) {
@@ -175,24 +185,74 @@ public class Terminal {
         }
     }
 
-    public void touch(String[] input) {
-        String currentPath = path.toString();
-        // check full or realtive path
-        if (Paths.get(input[0]).isAbsolute()) { // full path
-            try {
-                Files.createFile(Paths.get(input[0]));
-            } catch (Exception e) {
-                System.err.println("Failed to create file!" + e.getMessage());
+    public void touch(String [] input)
+    { String currentPath=path.toString();
+        if(input==null)
+        {
+            System.out.println("please pass parameters");
+        }
+        else
+        {
+                    //check full or realtive  path
+            if(Paths.get(input[0]).isAbsolute())
+            { // full path
+                try
+                {
+                    Files.createFile(Paths.get(input[0]));
+                }
+                catch (Exception e)
+                {
+                    System.err.println("Failed to create file!" + e.getMessage());
+                }
             }
-        } else {// realtive path
-            try {
-                String fullpath = "";
-                fullpath = currentPath + "\\" + input[0];
-                path = Paths.get(fullpath.toString());
-                Files.createFile(path);
-            } catch (Exception e) {
-                System.err.println("Failed to create file!" + e.getMessage());
+            else
+            {// realtive path
+                try {
+                    String fullpath="";
+                    fullpath = currentPath + "\\" + input[0];
+                    path = Paths.get(fullpath.toString());
+                    Files.createFile(path);
+
+                } catch (Exception e) {
+                    System.err.println("Failed to create file!" + e.getMessage());
+                }
             }
+        }
+    }
+
+    public void cp (String input [])
+    {
+        if (input==null)
+        {
+            System.out.println("please pass parameters");
+        }
+        else if(input.length>1)
+        {
+            if(input[0].equals("-r"))
+            {
+
+            }
+            else
+            {
+                //check if file exists
+                if(Files.exists(Paths.get(input[0])))
+                {
+                    try{
+                        Files.copy(Paths.get(input[0]), Paths.get(input[1])) ;
+                    } catch (IOException e) {
+
+                        e.printStackTrace();
+                    }
+                }
+                else
+                {
+                    System.out.println("cannot copy the file");
+                }
+            }
+        }
+        else
+        {
+            System.out.println("Too many arguments");
         }
     }
 
@@ -215,6 +275,9 @@ public class Terminal {
             break;
         case "touch":
             touch(parser.getArgs());
+            break;
+        case "cp":
+            cp(parser.getArgs());
             break;
         default:
             System.out.println("command not recognized");
@@ -247,4 +310,3 @@ public class Terminal {
 //  >
 // >>
 // choose command
-//
