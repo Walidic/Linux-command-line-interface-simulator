@@ -68,8 +68,63 @@ public class Terminal {
         output = path.toString();
         System.out.println(output);
     }
-    public void bo2samaka(String output,String path){
 
+    public void doubleBo2Samak(String output, String path) {
+        Path destination = Paths.get(path);
+        System.out.println(destination.toString());
+        if (destination.isAbsolute()) {
+            if (Files.exists(destination)) {
+                try {
+                    Files.write(destination, output.getBytes(), StandardOpenOption.APPEND);
+                } catch (IOException e) {
+                    System.err.println(e.getMessage());
+                }
+            } else {
+                System.out.println("given file doesnt exist");
+            }
+        } else {
+            String currentPath = path.toString();
+            String fullPath = currentPath + "\\" + path;
+            Path finalPath = Paths.get(fullPath);
+            if (Files.exists(finalPath)) {
+                try {
+                    Files.write(finalPath, output.getBytes(), StandardOpenOption.APPEND);
+                } catch (IOException e) {
+                    System.err.println(e.getMessage());
+                }
+            } else {
+                System.out.println("given file doesnt exist2");
+            }
+        }
+    }
+
+    public void bo2samaka(String output, String path) {
+        Path destination = Paths.get(path);
+        System.out.println(destination.toString());
+        if (destination.isAbsolute()) {
+            if (Files.exists(destination)) {
+                try {
+                    Files.write(destination, output.getBytes());
+                } catch (IOException e) {
+                    System.err.println(e.getMessage());
+                }
+            } else {
+                System.out.println("given file doesnt exist");
+            }
+        } else {
+            String currentPath = path.toString();
+            String fullPath = currentPath + "\\" + path;
+            Path finalPath = Paths.get(fullPath);
+            if (Files.exists(finalPath)) {
+                try {
+                    Files.write(finalPath, output.getBytes());
+                } catch (IOException e) {
+                    System.err.println(e.getMessage());
+                }
+            } else {
+                System.out.println("given file doesnt exist2");
+            }
+        }
     }
 
     public void echo(String[] input) {
@@ -123,17 +178,12 @@ public class Terminal {
     public void mkdir(String[] input) {
         // loop on all arguments
         String currentPath = path.toString();
-        if(input==null)
-        {
+        if (input == null) {
             System.out.println("please pass parameters");
-        }
-        else
-        {
-            for(int i=0; i<input.length;i++)
-            {
-                            // check full or realtive  path
-                if(Paths.get(input[i]).isAbsolute())
-                {// full path
+        } else {
+            for (int i = 0; i < input.length; i++) {
+                // check full or realtive path
+                if (Paths.get(input[i]).isAbsolute()) {// full path
                     try {
                         path = Paths.get(input[i]);
                         Files.createDirectory(path);
@@ -141,11 +191,9 @@ public class Terminal {
                     } catch (IOException e) {
                         System.err.println("Failed to create directory!" + e.getMessage());
                     }
-                }
-                else
-                { // realitve
+                } else { // realitve
                     try {
-                        String fullpath="";
+                        String fullpath = "";
                         fullpath = currentPath + "\\" + input[i];
                         path = Paths.get(fullpath.toString());
                         Files.createDirectory(path);
@@ -185,30 +233,21 @@ public class Terminal {
         }
     }
 
-    public void touch(String [] input)
-    { String currentPath=path.toString();
-        if(input==null)
-        {
+    public void touch(String[] input) {
+        String currentPath = path.toString();
+        if (input == null) {
             System.out.println("please pass parameters");
-        }
-        else
-        {
-                    //check full or realtive  path
-            if(Paths.get(input[0]).isAbsolute())
-            { // full path
-                try
-                {
+        } else {
+            // check full or realtive path
+            if (Paths.get(input[0]).isAbsolute()) { // full path
+                try {
                     Files.createFile(Paths.get(input[0]));
-                }
-                catch (Exception e)
-                {
+                } catch (Exception e) {
                     System.err.println("Failed to create file!" + e.getMessage());
                 }
-            }
-            else
-            {// realtive path
+            } else {// realtive path
                 try {
-                    String fullpath="";
+                    String fullpath = "";
                     fullpath = currentPath + "\\" + input[0];
                     path = Paths.get(fullpath.toString());
                     Files.createFile(path);
@@ -220,38 +259,26 @@ public class Terminal {
         }
     }
 
-    public void cp (String input [])
-    {
-        if (input==null)
-        {
+    public void cp(String input[]) {
+        if (input == null) {
             System.out.println("please pass parameters");
-        }
-        else if(input.length>1)
-        {
-            if(input[0].equals("-r"))
-            { // check if dir exists
-                
-            }
-            else
-            {
-                //check if file exists
-                if(Files.exists(Paths.get(input[0])))
-                {
-                    try{
-                        Files.copy(Paths.get(input[0]), Paths.get(input[1])) ;
+        } else if (input.length > 1) {
+            if (input[0].equals("-r")) { // check if dir exists
+
+            } else {
+                // check if file exists
+                if (Files.exists(Paths.get(input[0]))) {
+                    try {
+                        Files.copy(Paths.get(input[0]), Paths.get(input[1]));
                     } catch (IOException e) {
 
                         e.printStackTrace();
                     }
-                }
-                else
-                {
+                } else {
                     System.out.println("cannot copy the file");
                 }
             }
-        }
-        else
-        {
+        } else {
             System.out.println("Too many arguments");
         }
     }
@@ -289,11 +316,11 @@ public class Terminal {
         Terminal terminal = new Terminal();
         Scanner sc = new Scanner(System.in);
         while (true) {
-            String enteredCommand = sc.nextLine();
-            parser.parse(enteredCommand);
-            String command = parser.getCommandName();
-            terminal.chooseCommandAction(command);
-            parser.clear();
+        String enteredCommand = sc.nextLine();
+        parser.parse(enteredCommand);
+        String command = parser.getCommandName();
+        terminal.chooseCommandAction(command);
+        parser.clear();
         }
     }
 }
@@ -306,7 +333,7 @@ public class Terminal {
 // cp -r
 // cat
 // Exit
-//rm
-//  >
+// rm
+// >
 // >>
 // choose command
