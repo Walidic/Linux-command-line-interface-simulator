@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 
-
 class Parser {
     String commandName;
     String[] args;
@@ -29,18 +28,18 @@ class Parser {
                 }
             }
             // for (int i = 0; i < args.length; i++) {
-            //     if (args[i].charAt(0) == '"') {
-            //         for (int j = i + 1; j < args.length - (i + 1); j++) {
-            //             if (args[j].charAt(args[j].length() - 1) == '"') {
-            //                 args[i] = args[i] + " " + args[j];
-            //                 break;
-            //             } else {
-            //                 args[i] = args[i] + " " + args[j];p
-            //             }
-            //         }
-            //     } else {
-            //         System.out.println("no input entered");
-            //     }
+            // if (args[i].charAt(0) == '"') {
+            // for (int j = i + 1; j < args.length - (i + 1); j++) {
+            // if (args[j].charAt(args[j].length() - 1) == '"') {
+            // args[i] = args[i] + " " + args[j];
+            // break;
+            // } else {
+            // args[i] = args[i] + " " + args[j];p
+            // }
+            // }
+            // } else {
+            // System.out.println("no input entered");
+            // }
             // }
         }
         return true;
@@ -68,6 +67,9 @@ public class Terminal {
     public void pwd() {
         output = path.toString();
         System.out.println(output);
+    }
+    public void bo2samaka(String output,String path){
+
     }
 
     public void echo(String[] input) {
@@ -119,35 +121,30 @@ public class Terminal {
     }
 
     public void mkdir(String[] input) {
-        //loop on all arguments
+        // loop on all arguments
         String currentPath = path.toString();
-         for(int i=0; i<input.length;i++)
-        {
-            // check full or realtive  path
-        if(Paths.get(input[i]).isAbsolute())
-        {// full path
-            try {
-                path = Paths.get(input[i]);
-                Files.createDirectory(path);
+        for (int i = 0; i < input.length; i++) {
+            // check full or realtive path
+            if (Paths.get(input[i]).isAbsolute()) {// full path
+                try {
+                    path = Paths.get(input[i]);
+                    Files.createDirectory(path);
 
-            } catch (IOException e) {
-                System.err.println("Failed to create directory!" + e.getMessage());
+                } catch (IOException e) {
+                    System.err.println("Failed to create directory!" + e.getMessage());
+                }
+            } else { // realitve
+                try {
+                    String fullpath = "";
+                    fullpath = currentPath + "\\" + input[i];
+                    path = Paths.get(fullpath.toString());
+                    Files.createDirectory(path);
+
+                } catch (Exception e) {
+                    System.err.println("Failed to create directory!" + e.getMessage());
+                }
             }
         }
-        else
-        { // realitve
-            try {
-                String fullpath="";
-                fullpath = currentPath + "\\" + input[i];
-                 path = Paths.get(fullpath.toString());
-                 Files.createDirectory(path);
-
-            } catch (Exception e) {
-                System.err.println("Failed to create directory!" + e.getMessage());
-            }
-        }
-        }
-
 
     }
 
@@ -178,37 +175,28 @@ public class Terminal {
         }
     }
 
-    public void touch(String [] input)
-    { String currentPath=path.toString();
-        //check full or realtive  path
-        if(Paths.get(input[0]).isAbsolute())
-        { // full path
-            try
-            {
+    public void touch(String[] input) {
+        String currentPath = path.toString();
+        // check full or realtive path
+        if (Paths.get(input[0]).isAbsolute()) { // full path
+            try {
                 Files.createFile(Paths.get(input[0]));
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 System.err.println("Failed to create file!" + e.getMessage());
             }
-        }
-        else
-        {// realtive path
+        } else {// realtive path
             try {
-                String fullpath="";
+                String fullpath = "";
                 fullpath = currentPath + "\\" + input[0];
-                 path = Paths.get(fullpath.toString());
-                 Files.createFile(path);
-
+                path = Paths.get(fullpath.toString());
+                Files.createFile(path);
             } catch (Exception e) {
                 System.err.println("Failed to create file!" + e.getMessage());
             }
         }
-
     }
 
     public void chooseCommandAction(String command) {
-
         switch (command) {
         case "pwd":
             pwd();
@@ -232,7 +220,6 @@ public class Terminal {
             System.out.println("command not recognized");
             break;
         }
-
     }
 
     public static void main(String[] args) throws Exception {
@@ -257,7 +244,7 @@ public class Terminal {
 // cat
 // Exit
 //rm
-// >
+//  >
 // >>
 // choose command
 //
