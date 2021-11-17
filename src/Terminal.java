@@ -229,8 +229,8 @@ public class Terminal {
         else if(input.length>1)
         {
             if(input[0].equals("-r"))
-            {
-
+            { // check if dir exists
+                
             }
             else
             {
