@@ -6,7 +6,6 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
@@ -28,20 +27,6 @@ class Parser {
                     j++;
                 }
             }
-            // for (int i = 0; i < args.length; i++) {
-            // if (args[i].charAt(0) == '"') {
-            // for (int j = i + 1; j < args.length - (i + 1); j++) {
-            // if (args[j].charAt(args[j].length() - 1) == '"') {
-            // args[i] = args[i] + " " + args[j];
-            // break;
-            // } else {
-            // args[i] = args[i] + " " + args[j];p
-            // }
-            // }
-            // } else {
-            // System.out.println("no input entered");
-            // }
-            // }
         }
         return true;
     }
@@ -65,14 +50,80 @@ public class Terminal {
     String output = new String();
     Path path = Paths.get("E:\\linux_file_system");
 
+    public void rmdir(String[] input) {
+        if (input == null) {
+            System.out.println("No arguments given");
+        } else if (input.length == 1) {
+            if (input[0].equals("*")) {
+                // rmdir lee kolo
+            } else {
+                Path destination = Paths.get(input[0]);
+                if (destination.isAbsolute()) {
+                    if (Files.exists(destination)) {
+                        if (destination.getNameCount() == 0) {
+                            try {
+                                Files.delete(destination);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        else{
+                            System.out.println("directory is not empty");
+                        }
+                    }
+                    System.out.println("directory doesnt exist");
+                }
+                else{
+                    destination = Paths.get(path.toString()+"\\"+input[0]);
+                    if (Files.exists(destination)) {
+                        if (destination.getNameCount() == 0) {
+                            try {
+                                Files.delete(destination);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            System.out.println("directory is not empty");
+                        }
+                    }
+                    else{
+                    System.out.println("directory doesnt exist");
+                    }
+                }
+            }
+
+        }
+        else {
+            System.out.println("too many arguments");
+        }
+    }
+
     public void pwd() {
         output = path.toString();
         System.out.println(output);
     }
 
+    public void rm(String[] input) {
+        if (input == null) {
+            System.out.println("no arguments entered");
+        } else if (input.length == 1) {
+            Path pathTodelete = Paths.get(path.toString() + "\\" + input[0]);
+            if (Files.exists(pathTodelete)) {
+                try {
+                    Files.delete(pathTodelete);
+                } catch (IOException e) {
+                    System.err.println("File dosn't exist " + e.getMessage());
+                }
+            } else {
+                System.out.println("File doesnt exist");
+            }
+        } else {
+            System.out.println("Too many arguments");
+        }
+    }
+
     public void doubleBo2Samak(String output, String path) {
         Path destination = Paths.get(path);
-        System.out.println(destination.toString());
         if (destination.isAbsolute()) {
             if (Files.exists(destination)) {
                 try {
@@ -101,7 +152,6 @@ public class Terminal {
 
     public void bo2samaka(String output, String path) {
         Path destination = Paths.get(path);
-        System.out.println(destination.toString());
         if (destination.isAbsolute()) {
             if (Files.exists(destination)) {
                 try {
@@ -292,13 +342,13 @@ public void cp(String input[])
                 {
                     e.printStackTrace();
                 }
-                
+
             }
             else
             {
                 System.out.println("cannot copy the directory");
             }
-            
+
         }
         else
         {
@@ -357,7 +407,7 @@ public void cat (String input[])
         {
             try
             {
-                List <String> read = Files.readAllLines(Paths.get(input[0])); 
+                List <String> read = Files.readAllLines(Paths.get(input[0]));
                 System.out.println(read);
             }
             catch(IOException e)
@@ -371,7 +421,7 @@ public void cat (String input[])
         }
     }
     else
-    {// 
+    {//
         System.out.println("too many arguments");
     }
 }
@@ -399,9 +449,12 @@ public void cat (String input[])
         case "cp":
             cp(parser.getArgs());
             break;
-        case "cat": 
+        case "cat":
             cat(parser.getArgs());
             break;
+        case "rm":
+            rm(parser.getArgs());
+                break;
         default:
             System.out.println("command not recognized");
             break;
@@ -412,24 +465,24 @@ public void cat (String input[])
         Terminal terminal = new Terminal();
         Scanner sc = new Scanner(System.in);
         while (true) {
-        String enteredCommand = sc.nextLine();
-        parser.parse(enteredCommand);
-        String command = parser.getCommandName();
-        terminal.chooseCommandAction(command);
-        parser.clear();
+            String enteredCommand = sc.nextLine();
+            parser.parse(enteredCommand);
+            String command = parser.getCommandName();
+            terminal.chooseCommandAction(command);
+            parser.clear();
         }
     }
 }
-// Adham
 // echo done
-// cd done
+// pwd done
+// ls done
+// ls -r done
 // mkdir done
+// rmdir
 // touch done
-// cp
+// cp done
 // cp -r
+// rm done
 // cat
-// Exit
-// rm
-// >
-// >>
-// choose command
+// > done
+// >> done
