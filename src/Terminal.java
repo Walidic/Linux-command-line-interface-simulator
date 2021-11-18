@@ -50,7 +50,7 @@ public class Terminal {
     // Functions
     // 1-Echo
     public void echo(String[] input) {
-        if (input == null || input.length > 0) {
+        if (input == null || input.length > 0) {// check input is not null
             int size = input.length;
             output = input[0];
             for (int i = 1; i < size; i++) {
@@ -72,9 +72,9 @@ public class Terminal {
     // 3-cd
     public void cd(String[] input) {
         if (input == null) { // check that there is NO arguments
-            path = Paths.get("E:\\linux_file_system\\home");
+            path = Paths.get("E:\\linux_file_system\\home"); // default path
         } else if (input.length == 1) {
-            if (input[0].equals("..")) {
+            if (input[0].equals("..")) { // cd ..
                 if (!path.toString().equals("E:\\")) {
                     // .. return to home directory
                     path = path.getParent();
@@ -132,7 +132,7 @@ public class Terminal {
     public void mkdir(String[] input) {
         // loop on all arguments
         String currentPath = path.toString();
-        if (input == null) {
+        if (input == null) {// check if there is input
             System.out.println("please pass parameters");
         } else {
             for (int i = 0; i < input.length; i++) {
@@ -164,7 +164,7 @@ public class Terminal {
             System.out.println("No arguments given");
         } else if (input.length == 1) {
             if (input[0].equals("*")) {
-                try {
+                try { // sorted to prevent removal of non-empty directory
                     Files.walk(path).sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -209,22 +209,26 @@ public class Terminal {
     // 7-touch
     public void touch(String[] input) {
         String currentPath = path.toString();
-        if (input == null) {
+        if (input == null) { // check input is not null
             System.out.println("please pass parameters");
         } else {
             // check full or realtive path
             if (Paths.get(input[0]).isAbsolute()) { // full path
                 try {
+                    Path current = path; // so it stays in the same path
                     Files.createFile(Paths.get(input[0]));
+                    path = current;
                 } catch (Exception e) {
                     System.err.println("Failed to create file!" + e.getMessage());
                 }
             } else {// realtive path
                 try {
+                    Path current= path;
                     String fullpath = "";
                     fullpath = currentPath + "\\" + input[0];
                     path = Paths.get(fullpath.toString());
                     Files.createFile(path);
+                    path=current;
                 } catch (Exception e) {
                     System.err.println("Failed to create file!" + e.getMessage());
                 }
@@ -234,15 +238,15 @@ public class Terminal {
 
     // 8-cp & cp-r
     public void cp(String input[]) {
-        if (input == null) {
+        if (input == null) { // check if there is parameters
             System.out.println("please pass parameters");
         } else if (input.length > 1) {
-            if (input[0].equals("-r")) {
+            if (input[0].equals("-r")) { // cp-r
                 if (Files.exists(Paths.get(input[1]))) {
                     Path src = Paths.get(input[1]);
                     Path dest = Paths.get(input[2]);
                     try {
-                        Files.walk(src).forEach(source -> {
+                        Files.walk(src).forEach(source -> { // walk in each directory
                             try {
                                 Files.copy(source, dest.resolve(src.relativize(source)),
                                         StandardCopyOption.REPLACE_EXISTING);
@@ -259,7 +263,7 @@ public class Terminal {
                 }
 
             } else {
-                if (Files.exists(Paths.get(input[0]))) {
+                if (Files.exists(Paths.get(input[0]))) { //cp
                     try {
                         Files.copy(Paths.get(input[0]), Paths.get(input[1]));
                     } catch (IOException e) {
@@ -295,26 +299,26 @@ public class Terminal {
     }
 
     // 10-cat
-    public void cat(String input[]) {
-        if (input == null) {
+    public void cat(String input[]) { 
+        if (input == null) { // check file exists
             System.out.println("please pass parameters");
         } else if (input.length == 2) { // 2 arguments
             if (Files.exists(Paths.get(input[0]))) {// file exists
                 try { // read first file
                     List<String> read1 = Files.readAllLines(Paths.get(input[0]));
-                    Files.write(Paths.get(input[1]), read1, StandardOpenOption.APPEND);
+                    Files.write(Paths.get(input[1]), read1, StandardOpenOption.APPEND); //write to file
                     List<String> read2 = Files.readAllLines(Paths.get(input[1]));
                     System.out.println(read2);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             } else {
-                System.out.println("Cannot open the file");
+                System.out.println("Cannot open the file"); // file doesnot exist
             }
         } else if (input.length == 1) {// 1 argument
             if (Files.exists(Paths.get(input[0]))) {
                 try {
-                    List<String> read = Files.readAllLines(Paths.get(input[0]));
+                    List<String> read = Files.readAllLines(Paths.get(input[0]));// read file
                     System.out.println(read);
                 } catch (IOException e) {
                     e.printStackTrace();
