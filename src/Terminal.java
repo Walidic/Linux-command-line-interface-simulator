@@ -66,15 +66,13 @@ public class Terminal {
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
-                        }
-                        else{
+                        } else {
                             System.out.println("directory is not empty");
                         }
                     }
                     System.out.println("directory doesnt exist");
-                }
-                else{
-                    destination = Paths.get(path.toString()+"\\"+input[0]);
+                } else {
+                    destination = Paths.get(path.toString() + "\\" + input[0]);
                     if (Files.exists(destination)) {
                         if (destination.getNameCount() == 0) {
                             try {
@@ -85,15 +83,13 @@ public class Terminal {
                         } else {
                             System.out.println("directory is not empty");
                         }
-                    }
-                    else{
-                    System.out.println("directory doesnt exist");
+                    } else {
+                        System.out.println("directory doesnt exist");
                     }
                 }
             }
 
-        }
-        else {
+        } else {
             System.out.println("too many arguments");
         }
     }
@@ -310,120 +306,77 @@ public class Terminal {
         }
     }
 
-public void cp(String input[])
-{
-    if(input==null)
-    {
-        System.out.println("please pass parameters");
-    }
-    else if(input.length>1)
-    {
-        if(input[0].equals("-r"))
-        {
-            if(Files.exists(Paths.get(input[1])))
-            {
-                Path src=Paths.get(input[1]);
-                Path dest=Paths.get(input[2]);
-                try
-                {
-                    Files.walk(src)
-                    .forEach(source ->{
-                        try
-                        {
-                            Files.copy(source,dest.resolve(src.relativize(source)),StandardCopyOption.REPLACE_EXISTING);
-                        }
-                        catch(IOException e)
-                        {
-                            e.printStackTrace();
-                        }
-                    });
-                }
-                catch(IOException e)
-                {
-                    e.printStackTrace();
+    public void cp(String input[]) {
+        if (input == null) {
+            System.out.println("please pass parameters");
+        } else if (input.length > 1) {
+            if (input[0].equals("-r")) {
+                if (Files.exists(Paths.get(input[1]))) {
+                    Path src = Paths.get(input[1]);
+                    Path dest = Paths.get(input[2]);
+                    try {
+                        Files.walk(src).forEach(source -> {
+                            try {
+                                Files.copy(source, dest.resolve(src.relativize(source)),
+                                        StandardCopyOption.REPLACE_EXISTING);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        });
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                } else {
+                    System.out.println("cannot copy the directory");
                 }
 
-            }
-            else
-            {
-                System.out.println("cannot copy the directory");
-            }
-
-        }
-        else
-        {
-            if(Files.exists(Paths.get(input[0])))
-            {
-                try
-                {
-                    Files.copy(Paths.get(input[0]), Paths.get(input[1]));
+            } else {
+                if (Files.exists(Paths.get(input[0]))) {
+                    try {
+                        Files.copy(Paths.get(input[0]), Paths.get(input[1]));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    System.out.println("cannot copy the file");
                 }
-                catch(IOException e)
-                {
+            }
+        } else {
+            System.out.println("Too many arguments");
+        }
+    }
+
+    public void cat(String input[]) {
+        if (input == null) {
+            System.out.println("please pass parameters");
+        } else if (input.length == 2) { // 2 arguments
+            if (Files.exists(Paths.get(input[0]))) {// file exists
+                try { // read first file
+                    List<String> read1 = Files.readAllLines(Paths.get(input[0]));
+                    List<String> read2 = Files.readAllLines(Paths.get(input[1]));
+                    read2 = Files.write(Paths.get(input[1]), read1.getBytes(), StandardOpenOption.APPEND);
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
+            } else {
+                System.out.println("Cannot open the file");
             }
-            else
-            {
-                System.out.println("cannot copy the file");
+        } else if (input.length == 1) {// 1 argument
+            if (Files.exists(Paths.get(input[0]))) {
+                try {
+                    List<String> read = Files.readAllLines(Paths.get(input[0]));
+                    System.out.println(read);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                System.out.println("Cannot open the file");
             }
+        } else {//
+            System.out.println("too many arguments");
         }
     }
-    else
-    {
-        System.out.println("Too many arguments");
-    }
-}
-public void cat (String input[])
-{
-    if(input==null)
-    {
-        System.out.println("please pass parameters");
-    }
-    else if(input.length==2)
-    { // 2 arguments
-        if(Files.exists(Paths.get(input[0])))
-        {//file exists
-            try
-            { // read first file
-            List <String> read1= Files.readAllLines(Paths.get(input[0]));
-            List <String> read2= Files.readAllLines(Paths.get(input[1]));
-            read2= Files.write(Paths.get(input[1]),read1.getBytes(),StandardOpenOption.APPEND);
-            }
-            catch(IOException e)
-            {
-                e.printStackTrace();
-            }
-        }
-        else
-        {
-            System.out.println("Cannot open the file");
-        }
-    }
-    else if(input.length==1)
-    {// 1 argument
-        if(Files.exists(Paths.get(input[0])))
-        {
-            try
-            {
-                List <String> read = Files.readAllLines(Paths.get(input[0]));
-                System.out.println(read);
-            }
-            catch(IOException e)
-            {
-                e.printStackTrace();
-            }
-        }
-        else
-        {
-            System.out.println("Cannot open the file");
-        }
-    }
-    else
-    {//
-        System.out.println("too many arguments");
-    }
-}
 
     public void chooseCommandAction(String command) {
         switch (command) {
@@ -453,7 +406,7 @@ public void cat (String input[])
             break;
         case "rm":
             rm(parser.getArgs());
-                break;
+            break;
         default:
             System.out.println("command not recognized");
             break;
