@@ -337,8 +337,9 @@ public void cat (String input[])
             try
             { // read first file
             List <String> read1= Files.readAllLines(Paths.get(input[0]));
+            Files.write(Paths.get(input[1]),read1,StandardOpenOption.APPEND);
             List <String> read2= Files.readAllLines(Paths.get(input[1])); 
-            read2= Files.write(Paths.get(input[1]),read1.getBytes(),StandardOpenOption.APPEND);
+            System.out.println(read2);
             }
             catch(IOException e)
             {
