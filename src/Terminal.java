@@ -14,7 +14,6 @@ import java.util.List;
 class Parser {
     String commandName;
     String[] args;
-
     public boolean parse(String input) {
         String[] ParsedData = input.split(" ");
         if (ParsedData.length > 0) {
@@ -31,15 +30,12 @@ class Parser {
         }
         return true;
     }
-
     public String getCommandName() {
         return commandName;
     }
-
     public String[] getArgs() {
         return args;
     }
-
     public void clear() {
         commandName = "";
         args = null;
@@ -434,6 +430,9 @@ public class Terminal {
         while (true) {
             String enteredCommand = sc.nextLine();
             parser.parse(enteredCommand);
+            if (parser.getCommandName().equals("exit") || parser.getCommandName().equals("Exit")) {
+                break;
+            }
             String command = parser.getCommandName();
             terminal.chooseCommandAction(command);
             parser.clear();
