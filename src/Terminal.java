@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.Comparator;
 import java.util.List;
 
 class Parser {
@@ -56,6 +57,17 @@ public class Terminal {
         } else if (input.length == 1) {
             if (input[0].equals("*")) {
                 // rmdir lee kolo
+                try
+                {
+                    Files.walk(path)
+                    .sorted(Comparator.reverseOrder())
+                    .map(Path::toFile)
+                    .forEach(File::delete);
+                }
+                catch(IOException e)
+                {
+                    e.printStackTrace();
+                }   
             } else {
                 Path destination = Paths.get(input[0]);
                 if (destination.isAbsolute()) {
@@ -455,6 +467,9 @@ public void cat (String input[])
         case "rm":
             rm(parser.getArgs());
                 break;
+        case "rmdir":
+            rmdir(parser.getArgs());
+            break;
         default:
             System.out.println("command not recognized");
             break;
