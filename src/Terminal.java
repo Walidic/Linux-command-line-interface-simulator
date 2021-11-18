@@ -1,19 +1,21 @@
-import java.util.Scanner;
-import java.util.Stack;
-import java.util.stream.Stream;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.io.File;
+import java.util.List;
+import java.util.Stack;
+import java.util.Scanner;
+import java.nio.file.Path;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.List;
+import java.util.stream.Stream;
+import java.nio.file.StandardOpenOption;
+import java.nio.file.StandardCopyOption;
 
 class Parser {
     String commandName;
     String[] args;
+
     public boolean parse(String input) {
         String[] ParsedData = input.split(" ");
         if (ParsedData.length > 0) {
@@ -30,12 +32,15 @@ class Parser {
         }
         return true;
     }
+
     public String getCommandName() {
         return commandName;
     }
+
     public String[] getArgs() {
         return args;
     }
+
     public void clear() {
         commandName = "";
         args = null;
@@ -50,23 +55,66 @@ public class Terminal {
     // Functions
     // 1-Echo
     public void echo(String[] input) {
+        int option = 0;
+        int filePathindex = 0;
         if (input == null || input.length > 0) {// check input is not null
-            int size = input.length;
-            output = input[0];
-            for (int i = 1; i < size; i++) {
-                output = output + " " + input[i];
+            for(int i = 0; i < input.length; i++) {
+                if (input[i].equals(">")){
+                    option = 1;
+                    filePathindex = i+1;
+                }
+                else if(input[i].equals(">>")]){
+                    option = 2;
+                    filePathindex = i+1;
+                }
             }
-            System.out.println(output);
-            output = "";
+            if(option==0){
+                int size = input.length;
+                output = input[0];
+                for (int i = 1; i < size; i++) {
+                    output = output + " " + input[i];
+                }
+                System.out.println(output);
+            }
+            else if (option==1){
+                int size = input.length;
+                output = input[0];
+                for (int i = 1; i < size; i++) {
+                    output = output + " " + input[i];
+                }
+                overwriteFileWithOutput(output, input[filePathindex]);
+            }
+            else if(option ==2){
+                int size = input.length;
+                output = input[0];
+                for (int i = 1; i < size; i++) {
+                    output = output + " " + input[i];
+                }
+                appendFileWithOutput(output, input[filePathindex]);
+            }
         } else {
             System.out.println("Please enter an argument");
         }
     }
 
     // 2-pwd
-    public void pwd() {
-        output = path.toString();
-        System.out.println(output);
+    public void pwd(String[] input) {
+        if (input == null) {
+            output = path.toString();
+            System.out.println(output);
+        } else if (input.length == 2) {
+            if (input[0].equals(">")) {
+                output = path.toString();
+                overwriteFileWithOutput(output, input[1]);
+            } else if (input[0].equals(">>")) {
+                output = path.toString();
+                appendFileWithOutput(output, input[1]);
+            } else {
+                System.out.println("wrong argument");
+            }
+        } else {
+            System.out.println("wrong number of arguments");
+        }
     }
 
     // 3-cd
@@ -123,7 +171,73 @@ public class Terminal {
             } else {
                 System.out.println("Wrong argument");
             }
-        } else {
+        }
+        else if (input.length ==2){
+            if (input[1].equals(">")){
+                List<Path> output = new ArrayList<Path>();
+                try (Stream<Path> subPath = Files.walk(path, 1)) {
+                    subPath.forEach(output::add);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                String outputString = "";
+                for(Path temp:output){
+                    outputString = outputString+temp.toString()+"\n";
+                }
+                overwriteFileWithOutput(outputString, input[2])
+            }
+            else if (input[1].equals(">>")){
+                List<Path> output = new ArrayList<Path>();
+                try (Stream<Path> subPath = Files.walk(path, 1)) {
+                    subPath.forEach(output::add);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                String outputString = "";
+                for(Path temp:output){
+                    outputString = outputString+temp.toString()+"\n";
+                }
+                appendFileWithOutput(outputString, input[2]);
+            }
+            else{
+                System.out.println("wrong arguments");
+            }
+        }
+        else if (input.length == 4){
+            Stack<Path> stack = new Stack<Path>();
+            if (input[0].equals("-r")) {
+                if(input[2]==">"){
+                    try (Stream<Path> subPath = Files.walk(path, 1)) {
+                        subPath.forEach(stack::push);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    String output = "";
+                    while (!stack.empty()) {
+                        output = output+ stack.pop().toString()+"\n";
+                    }
+                    overwriteFileWithOutput(output, input[3]);
+                }
+                else if(input[2]==">>"){
+                    try (Stream<Path> subPath = Files.walk(path, 1)) {
+                        subPath.forEach(stack::push);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    String output = "";
+                    while (!stack.empty()) {
+                        output = output+ stack.pop().toString()+"\n";
+                    }
+                    appendFileWithOutput(output, input[3]);
+                }
+                else{
+                    System.out.println("wrong argument");
+                }
+            } else {
+                System.out.println("Wrong argument");
+            }
+        }
+        else {
             System.out.println("Too many arguments");
         }
     }
@@ -223,12 +337,12 @@ public class Terminal {
                 }
             } else {// realtive path
                 try {
-                    Path current= path;
+                    Path current = path;
                     String fullpath = "";
                     fullpath = currentPath + "\\" + input[0];
                     path = Paths.get(fullpath.toString());
                     Files.createFile(path);
-                    path=current;
+                    path = current;
                 } catch (Exception e) {
                     System.err.println("Failed to create file!" + e.getMessage());
                 }
@@ -257,13 +371,11 @@ public class Terminal {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-
                 } else {
                     System.out.println("cannot copy the directory");
                 }
-
             } else {
-                if (Files.exists(Paths.get(input[0]))) { //cp
+                if (Files.exists(Paths.get(input[0]))) { // cp
                     try {
                         Files.copy(Paths.get(input[0]), Paths.get(input[1]));
                     } catch (IOException e) {
@@ -299,14 +411,14 @@ public class Terminal {
     }
 
     // 10-cat
-    public void cat(String input[]) { 
+    public void cat(String input[]) {
         if (input == null) { // check file exists
             System.out.println("please pass parameters");
         } else if (input.length == 2) { // 2 arguments
             if (Files.exists(Paths.get(input[0]))) {// file exists
                 try { // read first file
                     List<String> read1 = Files.readAllLines(Paths.get(input[0]));
-                    Files.write(Paths.get(input[1]), read1, StandardOpenOption.APPEND); //write to file
+                    Files.write(Paths.get(input[1]), read1, StandardOpenOption.APPEND); // write to file
                     List<String> read2 = Files.readAllLines(Paths.get(input[1]));
                     System.out.println(read2);
                 } catch (IOException e) {
@@ -384,7 +496,7 @@ public class Terminal {
                     System.err.println(e.getMessage());
                 }
             } else {
-                System.out.println("given file doesnt exist2");
+                System.out.println("given file doesnt exist");
             }
         }
     }
@@ -393,7 +505,7 @@ public class Terminal {
     public void chooseCommandAction(String command) {
         switch (command) {
         case "pwd":
-            pwd();
+            pwd(parser.getArgs());
             break;
         case "echo":
             echo(parser.getArgs());
@@ -443,16 +555,3 @@ public class Terminal {
         }
     }
 }
-// echo done
-// pwd done
-// ls done
-// ls -r done
-// mkdir done
-// rmdir
-// touch done
-// cp done
-// cp -r
-// rm done
-// cat
-// > done
-// >> done
