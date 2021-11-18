@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.Comparator;
 import java.util.List;
 
 class Parser {
@@ -56,6 +57,17 @@ public class Terminal {
         } else if (input.length == 1) {
             if (input[0].equals("*")) {
                 // rmdir lee kolo
+                try
+                {
+                    Files.walk(path)
+                    .sorted(Comparator.reverseOrder())
+                    .map(Path::toFile)
+                    .forEach(File::delete);
+                }
+                catch(IOException e)
+                {
+                    e.printStackTrace();
+                }
             } else {
                 Path destination = Paths.get(input[0]);
                 if (destination.isAbsolute()) {
@@ -342,8 +354,42 @@ public class Terminal {
                     System.out.println("cannot copy the file");
                 }
             }
-        } else {
-            System.out.println("Too many arguments");
+            else
+            {
+                System.out.println("cannot copy the file");
+            }
+        }
+    }
+    else
+    {
+        System.out.println("Too many arguments");
+    }
+}
+public void cat (String input[])
+{
+    if(input==null)
+    {
+        System.out.println("please pass parameters");
+    }
+    else if(input.length==2)
+    { // 2 arguments
+        if(Files.exists(Paths.get(input[0])))
+        {//file exists
+            try
+            { // read first file
+            List <String> read1= Files.readAllLines(Paths.get(input[0]));
+            Files.write(Paths.get(input[1]),read1,StandardOpenOption.APPEND);
+            List <String> read2= Files.readAllLines(Paths.get(input[1]));
+            System.out.println(read2);
+            }
+            catch(IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
+        else
+        {
+            System.out.println("Cannot open the file");
         }
     }
 
@@ -406,6 +452,9 @@ public class Terminal {
             break;
         case "rm":
             rm(parser.getArgs());
+                break;
+        case "rmdir":
+            rmdir(parser.getArgs());
             break;
         default:
             System.out.println("command not recognized");
