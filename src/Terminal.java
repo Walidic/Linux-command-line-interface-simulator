@@ -4,8 +4,11 @@ import java.util.stream.Stream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import java.util.List;
 
 class Parser {
     String commandName;
@@ -307,29 +310,120 @@ public class Terminal {
         }
     }
 
-    public void cp(String input[]) {
-        if (input == null) {
-            System.out.println("please pass parameters");
-        } else if (input.length > 1) {
-            if (input[0].equals("-r")) { // check if dir exists
+public void cp(String input[])
+{
+    if(input==null)
+    {
+        System.out.println("please pass parameters");
+    }
+    else if(input.length>1)
+    {
+        if(input[0].equals("-r"))
+        {
+            if(Files.exists(Paths.get(input[1])))
+            {
+                Path src=Paths.get(input[1]);
+                Path dest=Paths.get(input[2]);
+                try
+                {
+                    Files.walk(src)
+                    .forEach(source ->{
+                        try
+                        {
+                            Files.copy(source,dest.resolve(src.relativize(source)),StandardCopyOption.REPLACE_EXISTING);
+                        }
+                        catch(IOException e)
+                        {
+                            e.printStackTrace();
+                        }
+                    });
+                }
+                catch(IOException e)
+                {
+                    e.printStackTrace();
+                }
 
-            } else {
-                // check if file exists
-                if (Files.exists(Paths.get(input[0]))) {
-                    try {
-                        Files.copy(Paths.get(input[0]), Paths.get(input[1]));
-                    } catch (IOException e) {
+            }
+            else
+            {
+                System.out.println("cannot copy the directory");
+            }
 
-                        e.printStackTrace();
-                    }
-                } else {
-                    System.out.println("cannot copy the file");
+        }
+        else
+        {
+            if(Files.exists(Paths.get(input[0])))
+            {
+                try
+                {
+                    Files.copy(Paths.get(input[0]), Paths.get(input[1]));
+                }
+                catch(IOException e)
+                {
+                    e.printStackTrace();
                 }
             }
-        } else {
-            System.out.println("Too many arguments");
+            else
+            {
+                System.out.println("cannot copy the file");
+            }
         }
     }
+    else
+    {
+        System.out.println("Too many arguments");
+    }
+}
+public void cat (String input[])
+{
+    if(input==null)
+    {
+        System.out.println("please pass parameters");
+    }
+    else if(input.length==2)
+    { // 2 arguments
+        if(Files.exists(Paths.get(input[0])))
+        {//file exists
+            try
+            { // read first file
+            List <String> read1= Files.readAllLines(Paths.get(input[0]));
+            List <String> read2= Files.readAllLines(Paths.get(input[1]));
+            read2= Files.write(Paths.get(input[1]),read1.getBytes(),StandardOpenOption.APPEND);
+            }
+            catch(IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
+        else
+        {
+            System.out.println("Cannot open the file");
+        }
+    }
+    else if(input.length==1)
+    {// 1 argument
+        if(Files.exists(Paths.get(input[0])))
+        {
+            try
+            {
+                List <String> read = Files.readAllLines(Paths.get(input[0]));
+                System.out.println(read);
+            }
+            catch(IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
+        else
+        {
+            System.out.println("Cannot open the file");
+        }
+    }
+    else
+    {//
+        System.out.println("too many arguments");
+    }
+}
 
     public void chooseCommandAction(String command) {
         switch (command) {
@@ -354,9 +448,12 @@ public class Terminal {
         case "cp":
             cp(parser.getArgs());
             break;
+        case "cat":
+            cat(parser.getArgs());
+            break;
         case "rm":
             rm(parser.getArgs());
-            break;
+                break;
         default:
             System.out.println("command not recognized");
             break;
